@@ -1,0 +1,10 @@
+using ProAtivo.Core.Models;
+using ProAtivo.Data.Repositories.Base;
+using ProAtivo.Data.Repositories.Interfaces;
+
+namespace ProAtivo.Data.Repositories
+{{
+    public class {class_name}Repository : RepositoryBase<{class_name}Model>, I{class_name}Repository
+    {{
+    }}
+}}

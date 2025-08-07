@@ -1,0 +1,73 @@
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using ProAtivo.Core.Models;
+using ProAtivo.Data.Repositories.Interfaces;
+
+namespace ProAtivo.Service.{class_name}Service
+{{
+    public class {class_name}Service : I{class_name}Service
+    {{
+        private readonly I{class_name}Repository _{repository_var};
+
+        public {class_name}Service(I{class_name}Repository {repository_var})
+        {{
+            _{repository_var} = {repository_var};
+        }}
+
+        public async Task<Dictionary<string, string>> Edit{class_name}({class_name}Model {item_var})
+        {{
+            var result = new Dictionary<string, string>();
+
+            if ({item_var} == null || !{item_var}.HasId())
+            {{
+                result.Add("Error", "{class_name} Não pode ser nula ou não possui um Cod. válido.");
+                return result;
+            }}
+            else
+            {{
+                _{repository_var}.Update({item_var});
+                result.Add("Success", "{class_name} alterada com sucesso.");
+            }}
+
+            return result;
+        }}
+
+        public async Task<Dictionary<string, string>> Excluir{class_name}(int id)
+        {{
+            var result = new Dictionary<string, string>();
+
+            if (id <= 0)
+            {{
+                result.Add("Error", "Id inválido.");
+                return result;
+            }}
+
+            var {item_var}ToRemove = await _{repository_var}.GetIdAsync(id);
+            
+            if ({item_var}ToRemove == null)
+            {{
+                result.Add("Error", "{class_name} não encontrada.");
+                return result;
+            }}
+
+            _{repository_var}.Remove({item_var});
+            result.Add("Success", "{class_name} excluída com sucesso.");
+            return result;
+        }}
+
+        public async Task<Dictionary<string, string>> Create{class_name}({class_name}Model {item_var})
+        {{
+            var result = new Dictionary<string, string>();
+
+            if ({item_var} == null || !{item_var}.IsValid())
+            {{
+                result.Add("Error", "{class_name} não pode ser nula ou inválida.");
+                return result;
+            }}
+
+            _{repository_var}.Add({item_var});
+            result.Add("Success", "{class_name} criada com sucesso.");
+            return result;
+        }}
+    }}
+}}

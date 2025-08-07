@@ -1,0 +1,8 @@
+using ProAtivo.Core.Models;
+
+namespace ProAtivo.Data.Repositories.Interfaces
+{{
+    public interface I{class_name}Repository : IRepositoryBase<{class_name}Model>
+    {{
+    }}
+}}

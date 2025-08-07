@@ -1,0 +1,13 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using ProAtivo.Core.Models;
+
+namespace ProAtivo.Service.{class_name}Service
+{{
+    public interface I{class_name}Service
+    {{
+        Task<Dictionary<string, string>> Create{class_name}({class_name}Model {item_var});
+        Task<Dictionary<string, string>> Edit{class_name}({class_name}Model {item_var});
+        Task<Dictionary<string, string>> Excluir{class_name}(int id);
+    }}
+}}

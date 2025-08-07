@@ -1,0 +1,153 @@
+using System;
+using System.Web.Mvc;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using MGWeb.Helpers;
+using ProAtivo.Core.Models;
+using ProAtivo.Service.{class_name}Service;
+
+namespace MGWeb.Controllers
+{{
+    public class {class_name}Controller : ControllerBase
+    {{
+        private readonly I{class_name}Service _{service_var};
+        private readonly IRespHelpers _respHelpers;
+
+        public {class_name}Controller(I{class_name}Service {service_var}, IRespHelpers respHelpers)
+        {{
+            _{service_var} = {service_var};
+            _respHelpers = respHelpers;
+        }}
+
+        [HttpGet]
+        [ProAtivoPermission("{permission_name}")]
+        public async Task<ActionResult> Index()
+        {{
+            ViewBag.TitlePag = "{class_name}";
+            return View();
+        }}
+
+        [HttpGet]
+        [ProAtivoPermission("{permission_name}")]
+        public async Task<ActionResult> Edit(int id)
+        {{
+            ViewBag.Pag = "Edit";
+            JsonResult jsonResult;
+
+            try
+            {{
+                var {item_var} = await _{service_var}.GetId(id);
+
+                if ({item_var} == null)
+                {{
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    jsonResult = _respHelpers.GetRespError("Erro ao tentar editar o item");
+                    return jsonResult;
+                }}
+
+                return View({item_var});
+            }}
+            catch (Exception ex)
+            {{
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                jsonResult = _respHelpers.GetRespError(ex.Message);
+                return jsonResult;
+            }}
+        }}
+
+        [HttpGet]
+        [ProAtivoPermission("{permission_name}")]
+        public async Task<ActionResult> Create(int id)
+        {{
+            ViewBag.Pag = "Create";
+            JsonResult jsonResult;
+
+            try
+            {{
+                var {item_var} = new {model_name}()
+                {{
+                    {id_model} = id
+                }};
+
+                return View({item_var});
+            }}
+            catch (Exception ex)
+            {{
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                jsonResult = _respHelpers.GetRespError(ex.Message);
+                return jsonResult;
+            }}
+        }}
+
+        [HttpPost]
+        [ProAtivoPermission("{permission_name}")]
+        public async Task<JsonResult> CreateOrEdit({model_name} model)
+        {{
+            JsonResult jsonResult;
+            var user = (UsuarioModel)Session["usuario"];
+            var result = new Dictionary<string, string>();
+
+            try
+            {{
+                model.SetUserAlteracao(user.ID_USUARIO);
+
+                if (model.HasId())
+                {{
+                    result = await _{service_var}.Edit{class_name}(model);
+                }}
+                else
+                {{
+                    result = await _{service_var}.Nova{class_name}(model);
+                }}
+
+                if (result.ContainsKey("Success"))
+                {{
+                    jsonResult = _respHelpers.GetRespSuccess(result["Success"]);
+                }}
+                else
+                {{
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    jsonResult = _respHelpers.GetRespError(result["Error"]);
+                }}
+
+                return jsonResult;
+            }}
+            catch (Exception ex)
+            {{
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                jsonResult = _respHelpers.GetRespError(ex.Message);
+                return jsonResult;
+            }}
+        }}
+
+        [HttpPost]
+        [ProAtivoPermission("{permission_name}")]
+        public async Task<JsonResult> Delete(int id)
+        {{
+            JsonResult jsonResult;
+
+            try
+            {{
+                var result = await _{service_var}.Excluir{class_name}(id);
+
+                if (result.ContainsKey("Success"))
+                {{
+                    jsonResult = _respHelpers.GetRespSuccess(result["Success"]);
+                }}
+                else
+                {{
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    jsonResult = _respHelpers.GetRespError(result["Error"]);
+                }}
+
+                return jsonResult;
+            }}
+            catch (Exception ex)
+            {{
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                jsonResult = _respHelpers.GetRespError(ex.Message);
+                return jsonResult;
+            }}
+        }}
+    }}
+}}
